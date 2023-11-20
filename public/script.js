@@ -3,7 +3,7 @@ let socketConnected = false;
 
 function connect(protocol, ip, port, name) {
 
-    socket = new WebSocket(`${protocol}://${ip}:${port}`)
+    socket = new WebSocket(`${protocol}://${ip}:${port}/${name}`)
 
     socket.onopen = function(e) {
         console.log("Socket connected")

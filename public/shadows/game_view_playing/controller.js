@@ -98,8 +98,6 @@ class GameViewPlaying extends HTMLElement {
 
     showInfo () {
         let txt = `Connected to <b>${socket.url}</b>, with ID <b>${this.socketId}</b>.`
-        console.log(socket.name)
-        console.log(socket.username)
         if (this.opponentId != "") {
             txt = txt + ` Playing against: <b>${this.opponentId}</b>`
         }
@@ -129,8 +127,8 @@ class GameViewPlaying extends HTMLElement {
         var width = this.canvas.width
 
         // Calculate useful coords and sizes
-        var thirdHorizontal = width / 3
-        var thirdVertical = height / 3
+        var thirdHorizontal = width / 4
+        var thirdVertical = height / 4
         var cellSize = Math.min(thirdHorizontal, thirdVertical) - 5
         var sixth = cellSize / 2
         var centerX = width / 2
@@ -146,7 +144,7 @@ class GameViewPlaying extends HTMLElement {
         this.coords.y = centerY - sixth - cellSize
         this.coords.cells = []
 
-        for (var cnt = 0; cnt < 9; cnt++) {
+        for (var cnt = 0; cnt < 16; cnt++) {
             var cellRow = cnt % 3
             var cellCol = Math.floor(cnt / 3)
             var cellX = this.coords.x + (cellRow * cellSize)
@@ -229,9 +227,12 @@ class GameViewPlaying extends HTMLElement {
         this.cellOpponentOver = -1
         this.winner = ""
 
+        console.log(obj)
+        console.log(obj.type)
         switch (obj.type) {
         case "socketId":
             this.socketId = obj.value
+            console.log(obj.value)
             break
         case "initMatch":
             this.match = obj.value
@@ -253,6 +254,7 @@ class GameViewPlaying extends HTMLElement {
         case "gameRound":
             this.gameStatus = "gameRound"
             this.match = obj.value
+            console.log(obj.value)
 
             if (this.match.playerX == this.socketId) {
                 this.player = "X"
@@ -269,7 +271,6 @@ class GameViewPlaying extends HTMLElement {
             }
             break
         }
-
         this.restartRun()
     }
 
