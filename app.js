@@ -78,7 +78,7 @@ ws.onConnection = (socket, id, name) => {
       playerX: id, 
       name: "",
       playerO: "", 
-      board: ["", "", "", "", "", "", "", "", ""],
+      board: ["", "", "", "", "", "", "", "", "","","","","","","","",""],
       nextTurn: "X"
     })
   } else {

@@ -26,10 +26,8 @@ class GameViewPlaying extends HTMLElement {
         this.winner = ""
 
         // Imatges
-        this.imgX = null
-        this.imgXloaded = false
-        this.imgO = null
-        this.imgOloaded = false
+        this.imgUncover = null
+        this.imgUncoverLoaded = false
 
         // Funcions per controlar el redibuix i els FPS
         this.reRunLastDrawTime = Date.now();  // Nova propietat per rastrejar l'últim temps de dibuix
@@ -44,13 +42,9 @@ class GameViewPlaying extends HTMLElement {
         // Quan es crea l'element shadow DOM (no quan es connecta el socket)
 
         // Preload images
-        this.imgX = new Image()
-        this.imgX.src = '/images/imgX.png'
-        this.imgX.onload = () => { this.imgXloaded = true }
-
-        this.imgO = new Image()
-        this.imgO.src = '/images/imgO.png'
-        this.imgO.onload = () => { this.imgOloaded = true }
+        this.imgUncover = new Image()
+        this.imgUncover.src = './images/uncover.jpeg'
+        this.imgUncover.onload = () => { this.imgUncoverLoaded = true }
 
         // Carrega els estils CSS
         const style = document.createElement('style')
@@ -84,9 +78,8 @@ class GameViewPlaying extends HTMLElement {
 
     initMemoryGame() {
         // Inicializar el tablero de memoria con imágenes
-        const images = ['/public/images/fastball.png', '/images/img2.jpg', '/images/img3.jpg', '/images/img4.jpg',
-                        '/images/img5.jpg', '/images/img6.jpg', '/images/img7.jpg', '/images/img8.jpg'];
-        this.match.board = this.shuffle(images.concat(images));
+        const images = ['/public/images/fastball.png', 'public/images/masterball.png', 'public/images/pokeball.png', 'public/images/potion.png',
+                        'public/images/safariball.png', 'public/images/stunfisk.png', 'public/images/superball.png', 'public/images/ultraball.png'];
         this.gameStatus = "gameRound";
         this.winner = "";
         this.isMyTurn = true;
