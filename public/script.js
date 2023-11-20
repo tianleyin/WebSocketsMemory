@@ -1,7 +1,7 @@
 let socket;
 let socketConnected = false;
 
-function connect(protocol, ip, port) {
+function connect(protocol, ip, port, name) {
 
     socket = new WebSocket(`${protocol}://${ip}:${port}`)
 

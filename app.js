@@ -65,7 +65,7 @@ function shutDown() {
 // WebSockets
 ws.init(httpServer, port)
 
-ws.onConnection = (socket, id) => {
+ws.onConnection = (socket, id, name) => {
 
   console.log("WebSocket client connected: " + id)
   idMatch = -1
@@ -76,6 +76,7 @@ ws.onConnection = (socket, id) => {
     idMatch = 0
     matches.push({
       playerX: id, 
+      name: "",
       playerO: "", 
       board: ["", "", "", "", "", "", "", "", ""],
       nextTurn: "X"
@@ -122,6 +123,7 @@ ws.onConnection = (socket, id) => {
   // Si ja hi ha dos jugadors
   if (playersReady) {
     let idOpponent = ""
+    let nameOpponent = ""
     if (matches[idMatch].playerX == id) {
       idOpponent = matches[idMatch].playerO
     } else {
