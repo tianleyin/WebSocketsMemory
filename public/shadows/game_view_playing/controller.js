@@ -77,7 +77,28 @@ class GameViewPlaying extends HTMLElement {
         window.addEventListener('resize', this.onResizeCanvas.bind(this))
         this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
         this.canvas.addEventListener('click', this.onMouseClick.bind(this))
+
+        // Inicializar el juego de memoria
+        this.initMemoryGame();
     } 
+
+    initMemoryGame() {
+        // Inicializar el tablero de memoria con imágenes
+        const images = ['/public/images/fastball.png', '/images/img2.jpg', '/images/img3.jpg', '/images/img4.jpg',
+                        '/images/img5.jpg', '/images/img6.jpg', '/images/img7.jpg', '/images/img8.jpg'];
+        this.match.board = this.shuffle(images.concat(images));
+        this.gameStatus = "gameRound";
+        this.winner = "";
+        this.isMyTurn = true;
+        this.cellOver = -1;
+        this.cellOpponentOver = -1;
+
+        // Mostrar las tarjetas ocultas por un tiempo al inicio
+        setTimeout(() => {
+            this.isMyTurn = false;
+            this.restartRun();
+        }, 2000);
+    }
 
     async disconnectedCallback() {
         // Quan es treu el shadow DOM de la pàgina (no quan es desconnecta el socket)
@@ -129,7 +150,7 @@ class GameViewPlaying extends HTMLElement {
         // Calculate useful coords and sizes
         var thirdHorizontal = width / 4
         var thirdVertical = height / 4
-        var cellSize = Math.min(thirdHorizontal, thirdVertical) - 5
+        var cellSize = Math.min(thirdHorizontal, thirdVertical) - 20
         var sixth = cellSize / 2
         var centerX = width / 2
         var centerY = height / 2
@@ -145,8 +166,8 @@ class GameViewPlaying extends HTMLElement {
         this.coords.cells = []
 
         for (var cnt = 0; cnt < 16; cnt++) {
-            var cellRow = cnt % 3
-            var cellCol = Math.floor(cnt / 3)
+            var cellRow = cnt % 4
+            var cellCol = Math.floor(cnt / 4)
             var cellX = this.coords.x + (cellRow * cellSize)
             var cellY = this.coords.y + (cellCol * cellSize)
 
@@ -319,15 +340,8 @@ class GameViewPlaying extends HTMLElement {
             return
         }
 
-        // Calcula els fps (opcional)
-        const fps = 1000 / elapsed
-        // console.log(`FPS: ${fps.toFixed(2)}, time: ${elapsed}, timeStamp: ${timestamp.toFixed(4)}`)
-
         // Dibuixar la partida
         this.draw()
-
-        // Guardar el temps actual per a la següent iteració
-        //this.reRunLastDrawTime = now;    
 
         // Programa el pròxim frame
         this.reRunRequestId = requestAnimationFrame(this.run.bind(this))

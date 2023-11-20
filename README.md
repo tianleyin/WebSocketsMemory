@@ -1,4 +1,4 @@
-### Tres en ratlla amb WebSockets i NodeJS
+### MEMORY amb WebSockets i NodeJS
 
 Executar el programa amb:
     
