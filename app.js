@@ -102,7 +102,7 @@ ws.onConnection = (socket, id, name) => {
       matches.push({ 
         playerX: id, 
         playerO: "", 
-        board: ["", "", "", "", "", "", "", "", ""],
+        board: ["", "", "", "", "", "", "", "", "","","","","","","",""],
         nextTurn: "X"
       })
     }

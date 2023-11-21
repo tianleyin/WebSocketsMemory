@@ -84,11 +84,11 @@ class GameViewPlaying extends HTMLElement {
         this.imgStunfisk.onload = () => { this.imgStunfiskloaded = true }
         
         this.imgSuperBall = new Image()
-        this.imgSuperBall.src = '/images/uncover.jpeg'
+        this.imgSuperBall.src = '/images/superball.jpeg'
         this.imgSuperBall.onload = () => { this.imgSuperBallloaded = true }
 
         this.imgUltraBall = new Image()
-        this.imgUltraBall.src = '/images/uncover.jpeg'
+        this.imgUltraBall.src = '/images/ultraball.jpeg'
         this.imgUltraBall.onload = () => { this.imgUltraBallloaded = true }
 
         this.imgUncover = new Image()
@@ -152,7 +152,6 @@ class GameViewPlaying extends HTMLElement {
             localStorage.setItem('name1', localStorage.getItem('name'))
         }
         let txt = `<b>${localStorage.getItem('name1')}</b>:  `
-        console.log(txt)
         if (this.opponentId != "") {
             txt = txt + `VS <b>${localStorage.getItem('name')}</b>:  `
         }
@@ -592,11 +591,6 @@ class GameViewPlaying extends HTMLElement {
     }
 
     drawX (ctx, color, cellCoords, cellSize) {
-        var padding = 20
-        var x0 = cellCoords.x + padding
-        var y0 = cellCoords.y + padding
-        var x1 = cellCoords.x + cellSize - padding
-        var y1 = cellCoords.y + cellSize - padding
         if (this.imgUncoverloaded) this.drawImage(ctx, this.imgUncover, cellCoords, cellSize)
     }
 
