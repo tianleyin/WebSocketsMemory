@@ -1,9 +1,11 @@
 let socket;
 let socketConnected = false;
 
-function connect(protocol, ip, port, name) {
+function connect(protocol, ip, port) {
 
-    socket = new WebSocket(`${protocol}://${ip}:${port}/${name}`)
+    socket = new WebSocket(`${protocol}://${ip}:${port}`)
+
+    console.log(socket)
 
     socket.onopen = function(e) {
         console.log("Socket connected")
@@ -12,6 +14,8 @@ function connect(protocol, ip, port, name) {
     
     socket.onmessage = function(event) {
         let obj = JSON.parse(event.data)
+        console.log(event)
+        console.log(obj)
         document.querySelector('game-ws').getViewShadow('game-view-playing').onServerMessage(obj)
     }
 

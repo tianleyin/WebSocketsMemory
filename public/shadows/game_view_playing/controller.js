@@ -16,9 +16,6 @@ class GameViewPlaying extends HTMLElement {
             board: [],
             nextTurn: "X"
         }
-        this.username = "" // Nombre 
-        this.userID = "" // ID del usuario
-        this.opponentname = "" // Nombre openente
         this.opponentId = ""  // Conté l'id de l'oponent
         this.gameStatus = "waitingOpponent" 
         this.player = "X"
@@ -26,8 +23,28 @@ class GameViewPlaying extends HTMLElement {
         this.winner = ""
 
         // Imatges
-        this.imgUncover = null
-        this.imgUncoverLoaded = false
+        this.imgUncover = null 
+        this.imgUncoverloaded = false
+        this.imgFastBall = null 
+        this.imgFastBallloaded = false
+        this.imgMasterBall = null 
+        this.imgMasterBallloaded = false
+        this.imgPokeball = null 
+        this.imgPokeballloaded = false
+        this.imgPotion = null 
+        this.imgPotionloaded = false
+        this.imgSafariBall = null 
+        this.imgSafariBallloaded = false
+        this.imgStunfisk = null 
+        this.imgStunfiskloaded = false
+        this.imgSuperBall = null 
+        this.imgSuperBallloaded = false
+        this.imgUltraBall = null 
+        this.imgUltraBallloaded = false
+        this.imgX = null
+        this.imgXloaded = false
+        this.imgO = null
+        this.imgOloaded = false
 
         // Funcions per controlar el redibuix i els FPS
         this.reRunLastDrawTime = Date.now();  // Nova propietat per rastrejar l'últim temps de dibuix
@@ -42,9 +59,49 @@ class GameViewPlaying extends HTMLElement {
         // Quan es crea l'element shadow DOM (no quan es connecta el socket)
 
         // Preload images
+        this.imgFastBall = new Image()
+        this.imgFastBall.src = '/images/fastball.png'
+        this.imgFastBall.onload = () => { this.imgFastBallloaded = true }
+
+        this.imgMasterBall = new Image()
+        this.imgMasterBall.src = '/images/masterball.png'
+        this.imgMasterBall.onload = () => { this.imgMasterBallloaded = true }
+
+        this.imgPokeball = new Image()
+        this.imgPokeball.src = '/images/pokeball.png'
+        this.imgPokeball.onload = () => { this.imgPokeballloaded = true }
+
+        this.imgPotion = new Image()
+        this.imgPotion.src = '/images/potion.png'
+        this.imgPotion.onload = () => { this.imgPotionloaded = true }
+
+        this.imgSafariBall = new Image()
+        this.imgSafariBall.src = '/images/safariball.png'
+        this.imgSafariBall.onload = () => { this.imgSafariBallloaded = true }
+
+        this.imgStunfisk = new Image()
+        this.imgStunfisk.src = '/images/stunfisk.png'
+        this.imgStunfisk.onload = () => { this.imgStunfiskloaded = true }
+        
+        this.imgSuperBall = new Image()
+        this.imgSuperBall.src = '/images/uncover.jpeg'
+        this.imgSuperBall.onload = () => { this.imgSuperBallloaded = true }
+
+        this.imgUltraBall = new Image()
+        this.imgUltraBall.src = '/images/uncover.jpeg'
+        this.imgUltraBall.onload = () => { this.imgUltraBallloaded = true }
+
         this.imgUncover = new Image()
-        this.imgUncover.src = './images/uncover.jpeg'
-        this.imgUncover.onload = () => { this.imgUncoverLoaded = true }
+        this.imgUncover.src = '/images/uncover.jpeg'
+        this.imgUncover.onload = () => { this.imgUncoverloaded = true }
+
+        this.imgX = new Image()
+        this.imgX.src = '/images/imgX.png'
+        this.imgX.onload = () => { this.imgXloaded = true }
+
+        this.imgO = new Image()
+        this.imgO.src = '/images/imgO.png'
+        this.imgO.onload = () => { this.imgOloaded = true }
 
         // Carrega els estils CSS
         const style = document.createElement('style')
@@ -71,26 +128,6 @@ class GameViewPlaying extends HTMLElement {
         window.addEventListener('resize', this.onResizeCanvas.bind(this))
         this.canvas.addEventListener('mousemove', this.onMouseMove.bind(this))
         this.canvas.addEventListener('click', this.onMouseClick.bind(this))
-
-        // Inicializar el juego de memoria
-        this.initMemoryGame();
-    } 
-
-    initMemoryGame() {
-        // Inicializar el tablero de memoria con imágenes
-        const images = ['/public/images/fastball.png', 'public/images/masterball.png', 'public/images/pokeball.png', 'public/images/potion.png',
-                        'public/images/safariball.png', 'public/images/stunfisk.png', 'public/images/superball.png', 'public/images/ultraball.png'];
-        this.gameStatus = "gameRound";
-        this.winner = "";
-        this.isMyTurn = true;
-        this.cellOver = -1;
-        this.cellOpponentOver = -1;
-
-        // Mostrar las tarjetas ocultas por un tiempo al inicio
-        setTimeout(() => {
-            this.isMyTurn = false;
-            this.restartRun();
-        }, 2000);
     }
 
     async disconnectedCallback() {
@@ -111,9 +148,13 @@ class GameViewPlaying extends HTMLElement {
     }
 
     showInfo () {
-        let txt = `Connected to <b>${socket.url}</b>, with ID <b>${this.socketId}</b>.`
+        if (this.opponentId == "") {
+            localStorage.setItem('name1', localStorage.getItem('name'))
+        }
+        let txt = `<b>${localStorage.getItem('name1')}</b>:  `
+        console.log(txt)
         if (this.opponentId != "") {
-            txt = txt + ` Playing against: <b>${this.opponentId}</b>`
+            txt = txt + `VS <b>${localStorage.getItem('name')}</b>:  `
         }
         this.shadow.querySelector('#connectionInfo').innerHTML = txt
     }
@@ -143,10 +184,10 @@ class GameViewPlaying extends HTMLElement {
         // Calculate useful coords and sizes
         var thirdHorizontal = width / 4
         var thirdVertical = height / 4
-        var cellSize = Math.min(thirdHorizontal, thirdVertical) - 20
-        var sixth = cellSize / 2
-        var centerX = width / 2
-        var centerY = height / 2
+        var cellSize = Math.min(thirdHorizontal, thirdVertical) - 60
+        var sixth = cellSize / 3
+        var centerX = width/ 2 - 100
+        var centerY = height / 2 - 100
 
         // Set coords
         this.coords.cellSize = cellSize
@@ -241,19 +282,28 @@ class GameViewPlaying extends HTMLElement {
         this.cellOpponentOver = -1
         this.winner = ""
 
-        console.log(obj)
-        console.log(obj.type)
         switch (obj.type) {
         case "socketId":
             this.socketId = obj.value
-            console.log(obj.value)
             break
         case "initMatch":
             this.match = obj.value
+            if (this.match.playerX == this.socketId) {
+                this.player = "X"
+                this.opponentId = this.match.playerO
+                if (this.match.nextTurn == "X") {
+                    this.isMyTurn = true
+                }
+            } else {
+                this.player = "O"
+                this.opponentId = this.match.playerX
+                if (this.match.nextTurn == "O") {
+                    this.isMyTurn = true
+                }
+            }
             this.showInfo()
             break
         case "opponentDisconnected":
-            console.log("opponentDisconnected")
             this.gameStatus = "waitingOpponent"
             this.showInfo()
             break
@@ -333,8 +383,15 @@ class GameViewPlaying extends HTMLElement {
             return
         }
 
+        // Calcula els fps (opcional)
+        const fps = 1000 / elapsed
+        // console.log(`FPS: ${fps.toFixed(2)}, time: ${elapsed}, timeStamp: ${timestamp.toFixed(4)}`)
+
         // Dibuixar la partida
         this.draw()
+
+        // Guardar el temps actual per a la següent iteració
+        //this.reRunLastDrawTime = now;    
 
         // Programa el pròxim frame
         this.reRunRequestId = requestAnimationFrame(this.run.bind(this))
@@ -496,6 +553,7 @@ class GameViewPlaying extends HTMLElement {
         for (var cnt = 0; cnt < board.length; cnt++) {
             var cell = board[cnt]
             var cellCoords = this.coords.cells[cnt]
+            this.drawX(ctx, colorX, cellCoords, cellSize)
 
             // Si toca jugar, i el ratolí està sobre la casella, dibuixa la simulació de partida
             if (this.isMyTurn && this.cellOver == cnt && board[cnt] == "") {
@@ -503,7 +561,7 @@ class GameViewPlaying extends HTMLElement {
                 if (this.player == "X") {
                    this.drawX(ctx, colorX, cellCoords, cellSize)
                 } else {
-                    this.drawO(ctx, colorO, cellCoords, cellSize)
+                    this.drawX(ctx, colorO, cellCoords, cellSize)
                 } 
             }
 
@@ -512,7 +570,7 @@ class GameViewPlaying extends HTMLElement {
                 var cellOverCords = this.coords.cells[this.cellOpponentOver]
                 this.fillRect(ctx, 10, colorOver, cellCoords.x, cellCoords.y, cellSize, cellSize)
                 if (this.player == "X") {
-                   this.drawO(ctx, colorO, cellOverCords, cellSize)
+                   this.drawX(ctx, colorO, cellOverCords, cellSize)
                 } else {
                     this.drawX(ctx, colorX, cellOverCords, cellSize)
                 } 
@@ -528,7 +586,7 @@ class GameViewPlaying extends HTMLElement {
             }
             if (cell == "O") {
                 if (this.imgOloaded) this.drawImage(ctx, this.imgO, cellCoords, cellSize)
-                else this.drawO(ctx, colorO, cellCoords, cellSize)
+                else this.drawX(ctx, colorO, cellCoords, cellSize)
             }
         }
     }
@@ -539,18 +597,9 @@ class GameViewPlaying extends HTMLElement {
         var y0 = cellCoords.y + padding
         var x1 = cellCoords.x + cellSize - padding
         var y1 = cellCoords.y + cellSize - padding
-        this.drawLine(ctx, 10, color, x0, y0, x1, y1)
-        x0 = cellCoords.x + cellSize - padding
-        x1 = cellCoords.x + padding
-        this.drawLine(ctx, 10, color, x0, y0, x1, y1)
+        if (this.imgUncoverloaded) this.drawImage(ctx, this.imgUncover, cellCoords, cellSize)
     }
 
-    drawO (ctx, color, cellCoords, cellSize) {
-        var padding = 20
-        var x = cellCoords.x + (cellSize / 2)
-        var y = cellCoords.y + (cellSize / 2)
-        this.drawCircle(ctx, 10, color, x, y, (cellSize / 2) - padding)
-    }
 }
 
 // Defineix l'element personalitzat
